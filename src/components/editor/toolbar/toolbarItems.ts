@@ -6,19 +6,23 @@ import {
     AlignLeft, AlignCenter, AlignRight,
 } from 'lucide-react';
 import { Editor } from '@tiptap/react';
+import { TableMenu } from './TableMenu';
+import { Table } from 'lucide-react';
+import {FC} from "react";
 
+// Update the ToolbarItem interface to support custom components
 export interface ToolbarItem {
     icon: any;
     label: string;
     action: (editor: Editor) => boolean;
     isActive?: (editor: Editor) => boolean;
+    customComponent?: FC<{ editor: Editor }>;  // Add this line
 }
 
 export interface ToolbarGroup {
     title: string;
     items: ToolbarItem[];
 }
-
 export const defaultToolbarGroups: ToolbarGroup[] = [
     {
         title: 'History',
@@ -141,6 +145,17 @@ export const defaultToolbarGroups: ToolbarGroup[] = [
                 label: 'Blockquote',
                 action:(editor)=> editor.chain().focus().toggleBlockquote().run(),
                 isActive:(editor)=> editor.isActive('blockquote'),
+            },
+        ],
+    },
+    {
+        title: 'Table',
+        items: [
+            {
+                icon: Table,
+                label: 'Table',
+                action: () => false, // This will be handled by the TableMenu component
+                customComponent: TableMenu, // Add this new property
             },
         ],
     },

@@ -22,13 +22,20 @@ const Toolbar: React.FC<ToolbarProps> = ({ editor, onSave }) => {
                     <React.Fragment key={group.title}>
                         <div className="flex items-center gap-1">
                             {group.items.map((item) => (
-                                <ToolbarButton
-                                    key={item.label}
-                                    icon={item.icon}
-                                    label={item.label}
-                                    onClick={() => item.action(editor)}
-                                    isActive={item.isActive?.(editor)}
-                                />
+                                item.customComponent ? (
+                                    <item.customComponent
+                                        key={item.label}
+                                        editor={editor}
+                                    />
+                                ) : (
+                                    <ToolbarButton
+                                        key={item.label}
+                                        icon={item.icon}
+                                        label={item.label}
+                                        onClick={() => item.action(editor)}
+                                        isActive={item.isActive?.(editor)}
+                                    />
+                                )
                             ))}
                         </div>
                         {index < defaultToolbarGroups.length - 1 && <ToolbarDivider />}

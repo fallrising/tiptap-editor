@@ -1,8 +1,10 @@
 import StarterKit from '@tiptap/starter-kit';
 import Underline from '@tiptap/extension-underline';
 import { TextAlign } from "@tiptap/extension-text-align";
+import { tableExtensions } from './table';
 
 export const defaultExtensions = [
+    ...tableExtensions,
     StarterKit.configure({
         heading: {
             levels: [1, 2, 3],

@@ -86,6 +86,39 @@
     }
 }
 
+@layer components {
+    .ProseMirror {
+        @apply min-h-[200px] outline-none w-full;
+    }
+
+    .ProseMirror p.is-editor-empty:first-child::before {
+        @apply text-gray-400 float-left h-0 pointer-events-none;
+        content: attr(data-placeholder);
+    }
+
+    /* Table styles */
+    .ProseMirror table {
+        @apply border-collapse table-auto w-full my-4;
+    }
+
+    .ProseMirror table td,
+    .ProseMirror table th {
+        @apply border border-gray-200 p-2 relative;
+        min-width: 1em;
+    }
+
+    .ProseMirror table th {
+        @apply font-bold bg-gray-50;
+    }
+
+    /* Selected cell */
+    .ProseMirror .selectedCell:after {
+        @apply absolute inset-0 bg-blue-100/50 pointer-events-none;
+        content: '';
+        z-index: 2;
+    }
+}
+
 /* Keep your existing editor styles */
 .ProseMirror {
     @apply min-h-[200px] outline-none;
