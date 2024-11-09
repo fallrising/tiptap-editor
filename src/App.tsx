@@ -245,7 +245,7 @@ const App: React.FC = () => {
             />
             <div className="flex-1 flex flex-col overflow-hidden">
                 <div className="flex items-center justify-between px-6 py-2 bg-white border-b">
-                    <h1 className="text-xl font-bold">Rich Text Editor</h1>
+                    <h1 className="text-xl font-bold">Personal Online Editor</h1>
                     <div className="flex items-center space-x-4">
                         <span className="text-sm text-gray-600">{user.username}</span>
                         <button
