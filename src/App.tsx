@@ -75,20 +75,18 @@ const App: React.FC = () => {
 
     const handleSave = async (content: string) => {
         if (selectedDoc && user) {
-            const newVersion = selectedDoc.metadata.version + 1;
-
-            // Create version record
-            const versionRecord: Partial<DocumentVersion> = {
-                documentId: selectedDoc.id,
-                content: selectedDoc.content, // Save the previous content
-                title: selectedDoc.title,
-                version: selectedDoc.metadata.version,
-                createdAt: new Date().toISOString(),
-                createdBy: user.id,
-                changeDescription: `Changes made by ${user.username}`,
-            };
-
             try {
+                // Save version history first
+                const versionRecord: Partial<DocumentVersion> = {
+                    documentId: selectedDoc.id,
+                    content: selectedDoc.content, // Save the previous content
+                    title: selectedDoc.title,
+                    version: selectedDoc.metadata.version, // Use current version, not incremented
+                    createdAt: new Date().toISOString(),
+                    createdBy: user.id,
+                    changeDescription: `Changes made by ${user.username}`,
+                };
+
                 // Save version history
                 await fetch(`${process.env.REACT_APP_API_URL}/document-versions`, {
                     method: 'POST',
@@ -96,7 +94,10 @@ const App: React.FC = () => {
                     body: JSON.stringify(versionRecord),
                 });
 
-                // Update document
+                // Increment version only once for the document update
+                const newVersion = selectedDoc.metadata.version + 1;
+
+                // Update document with new content and incremented version
                 const updatedDoc: Partial<Document> = {
                     ...selectedDoc,
                     content,
@@ -127,6 +128,7 @@ const App: React.FC = () => {
             }
         }
     };
+
     const handleRestoreVersion = async (version: DocumentVersion) => {
         if (selectedDoc && user) {
             const updatedDoc: Partial<Document> = {
@@ -161,6 +163,7 @@ const App: React.FC = () => {
             }
         }
     };
+
     const handleTitleChange = async (newTitle: string) => {
         if (selectedDoc && user) {
             const updatedDoc = {

@@ -19,7 +19,7 @@ server.use((req, res, next) => {
     req.body.metadata = {
       ...req.body.metadata,
       updatedAt: new Date().toISOString(),
-      version: (req.body.metadata?.version || 0) + 1
+      version: (req.body.metadata?.version || 0)
     };
   }
   next();

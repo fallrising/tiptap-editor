@@ -1,10 +1,9 @@
 import React, { useCallback } from 'react';
 import { useEditor, EditorContent } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
-import Underline from '@tiptap/extension-underline';  // Add this import
+import Underline from '@tiptap/extension-underline';
 import Toolbar from './Toolbar';
 
-// Export the interface so it can be imported elsewhere
 export interface TiptapEditorProps {
     initialContent?: string;
     onSave?: (content: string) => Promise<void>;
@@ -13,8 +12,12 @@ export interface TiptapEditorProps {
 const TiptapEditor: React.FC<TiptapEditorProps> = ({ initialContent, onSave }) => {
     const editor = useEditor({
         extensions: [
-            StarterKit,
-            Underline,  // Add the Underline extension
+            StarterKit.configure({
+                heading: {
+                    levels: [1, 2, 3]
+                }
+            }),
+            Underline,
         ],
         content: initialContent || '<p>Start typing here...</p>',
         editorProps: {
