@@ -5,7 +5,11 @@
       "username": "admin",
       "password": "admin123",
       "role": "admin",
-      "permissions": ["create", "edit", "delete"]
+      "permissions": [
+        "create",
+        "edit",
+        "delete"
+      ]
     }
   ],
   "documents": [
@@ -19,6 +23,83 @@
         "createdBy": "1",
         "version": 1
       }
+    },
+    {
+      "title": "Untitled Document",
+      "content": "<p>Start typing here...</p>",
+      "metadata": {
+        "createdAt": "2024-11-09T06:00:42.180Z",
+        "updatedAt": "2024-11-09T06:00:42.180Z",
+        "createdBy": "1",
+        "version": 1
+      },
+      "id": "miIG8Eu"
+    },
+    {
+      "title": "Untitled Document",
+      "content": "<p>Start typing here...</p>",
+      "metadata": {
+        "createdAt": "2024-11-09T06:01:00.625Z",
+        "updatedAt": "2024-11-09T06:01:00.625Z",
+        "createdBy": "1",
+        "version": 1
+      },
+      "id": "w6Jg8xF"
+    },
+    {
+      "title": "Untitled Document",
+      "content": "<p>Start typing here...</p>",
+      "metadata": {
+        "createdAt": "2024-11-09T06:01:04.520Z",
+        "updatedAt": "2024-11-09T06:01:04.520Z",
+        "createdBy": "1",
+        "version": 1
+      },
+      "id": "q4cHQ8m"
+    },
+    {
+      "title": "Untitled Document",
+      "content": "<p>Start typing here...</p>",
+      "metadata": {
+        "createdAt": "2024-11-09T06:01:05.053Z",
+        "updatedAt": "2024-11-09T06:01:05.053Z",
+        "createdBy": "1",
+        "version": 1
+      },
+      "id": "DzUaC1U"
+    },
+    {
+      "title": "Untitled Document",
+      "content": "<p>Start typing here...</p>",
+      "metadata": {
+        "createdAt": "2024-11-09T06:01:05.437Z",
+        "updatedAt": "2024-11-09T06:01:05.437Z",
+        "createdBy": "1",
+        "version": 1
+      },
+      "id": "b95S7tS"
+    },
+    {
+      "title": "Untitled Document",
+      "content": "<p>Start typing here...</p>",
+      "metadata": {
+        "createdAt": "2024-11-09T06:01:05.755Z",
+        "updatedAt": "2024-11-09T06:01:05.755Z",
+        "createdBy": "1",
+        "version": 1
+      },
+      "id": "n1eUsjw"
+    },
+    {
+      "title": "Untitled Document",
+      "content": "<p>Start typing here...</p>",
+      "metadata": {
+        "createdAt": "2024-11-09T06:01:06.137Z",
+        "updatedAt": "2024-11-09T06:01:06.137Z",
+        "createdBy": "1",
+        "version": 1
+      },
+      "id": "dGkzZGW"
     }
   ]
 }

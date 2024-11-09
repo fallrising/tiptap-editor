@@ -1,3 +1,4 @@
+// src/components/editor/Toolbar.tsx
 import React from 'react';
 import { Editor } from '@tiptap/react';
 
@@ -11,48 +12,71 @@ const Toolbar: React.FC<ToolbarProps> = ({ editor, onSave }) => {
         return null;
     }
 
+    const toolbarGroups = [
+        {
+            title: 'Text Style',
+            items: [
+                {
+                    icon: 'B',
+                    label: 'Bold',
+                    action: () => editor.chain().focus().toggleBold().run(),
+                    isActive: () => editor.isActive('bold'),
+                },
+                {
+                    icon: 'I',
+                    label: 'Italic',
+                    action: () => editor.chain().focus().toggleItalic().run(),
+                    isActive: () => editor.isActive('italic'),
+                },
+                {
+                    icon: 'U',
+                    label: 'Underline',
+                    action: () => editor.chain().focus().toggleUnderline().run(),
+                    isActive: () => editor.isActive('underline'),
+                },
+                {
+                    icon: 'S',
+                    label: 'Strike',
+                    action: () => editor.chain().focus().toggleStrike().run(),
+                    isActive: () => editor.isActive('strike'),
+                },
+            ],
+        },
+        // ... rest of the toolbar groups remain the same
+    ];
+
     return (
-        <div className="flex flex-wrap gap-2 p-3 border-b">
-            <button
-                onClick={() => editor.chain().focus().toggleBold().run()}
-                className={`px-3 py-1 rounded border ${
-                    editor.isActive('bold') ? 'bg-gray-200' : 'bg-white'
-                }`}
-            >
-                Bold
-            </button>
-            <button
-                onClick={() => editor.chain().focus().toggleItalic().run()}
-                className={`px-3 py-1 rounded border ${
-                    editor.isActive('italic') ? 'bg-gray-200' : 'bg-white'
-                }`}
-            >
-                Italic
-            </button>
-            <button
-                onClick={() => editor.chain().focus().toggleHeading({ level: 1 }).run()}
-                className={`px-3 py-1 rounded border ${
-                    editor.isActive('heading', { level: 1 }) ? 'bg-gray-200' : 'bg-white'
-                }`}
-            >
-                H1
-            </button>
-            <button
-                onClick={() => editor.chain().focus().toggleBulletList().run()}
-                className={`px-3 py-1 rounded border ${
-                    editor.isActive('bulletList') ? 'bg-gray-200' : 'bg-white'
-                }`}
-            >
-                Bullet List
-            </button>
-            {onSave && (
-                <button
-                    onClick={onSave}
-                    className="px-3 py-1 rounded bg-blue-500 text-white hover:bg-blue-600 ml-auto"
-                >
-                    Save
-                </button>
-            )}
+        <div className="border-b border-gray-200 bg-white sticky top-0">
+            <div className="flex flex-wrap gap-4 p-2">
+                {toolbarGroups.map((group, index) => (
+                    <div key={index} className="flex items-center gap-1">
+                        {group.items.map((item, itemIndex) => (
+                            <button
+                                key={itemIndex}
+                                onClick={item.action}
+                                className={`
+                  p-2 rounded hover:bg-gray-100 transition-colors
+                  ${item.isActive() ? 'bg-gray-200' : ''}
+                `}
+                                title={item.label}
+                            >
+                                {item.icon}
+                            </button>
+                        ))}
+                        {index < toolbarGroups.length - 1 && (
+                            <div className="w-px h-6 bg-gray-300 mx-2" />
+                        )}
+                    </div>
+                ))}
+                {onSave && (
+                    <button
+                        onClick={onSave}
+                        className="ml-auto px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors"
+                    >
+                        Save
+                    </button>
+                )}
+            </div>
         </div>
     );
 };
