@@ -1,14 +1,19 @@
-// src/components/editor/DocumentHeader.tsx
-import React, { useState, useCallback } from 'react';
+import React, { useState } from 'react';
 import { Document } from '@/types/document';
 
 interface DocumentHeaderProps {
     document: Document | null;
     onTitleChange: (title: string) => Promise<void>;
+    onVersionHistoryClick: () => void;
     lastSaved?: string;
 }
 
-const DocumentHeader: React.FC<DocumentHeaderProps> = ({ document, onTitleChange, lastSaved }) => {
+const DocumentHeader: React.FC<DocumentHeaderProps> = ({
+                                                           document,
+                                                           onTitleChange,
+                                                           onVersionHistoryClick,
+                                                           lastSaved,
+                                                       }) => {
     const [isEditing, setIsEditing] = useState(false);
     const [title, setTitle] = useState(document?.title || 'Untitled');
 
@@ -59,11 +64,19 @@ const DocumentHeader: React.FC<DocumentHeaderProps> = ({ document, onTitleChange
           </span>
                 )}
             </div>
-            {document && (
+            <div className="flex items-center space-x-4">
+                {document && (
+                    <button
+                        onClick={onVersionHistoryClick}
+                        className="text-sm text-blue-500 hover:text-blue-600"
+                    >
+                        View History
+                    </button>
+                )}
                 <div className="text-sm text-gray-500">
-                    Version: {document.metadata.version}
+                    Version: {document?.metadata.version || 1}
                 </div>
-            )}
+            </div>
         </div>
     );
 };

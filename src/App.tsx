@@ -4,8 +4,10 @@ import TiptapEditor from './components/editor/TiptapEditor';
 import Sidebar from './components/layout/Sidebar';
 import DocumentHeader from './components/editor/DocumentHeader';
 import LoginForm from './components/auth/LoginForm';
+import VersionHistory from './components/version/VersionHistory';
 import {CreateDocumentDto, Document} from './types/document';
 import { User } from './types/auth';
+import { DocumentVersion } from './types/version';
 
 const App: React.FC = () => {
     const [user, setUser] = useState<User | null>(null);
@@ -13,6 +15,27 @@ const App: React.FC = () => {
     const [selectedDoc, setSelectedDoc] = useState<Document | null>(null);
     const [loading, setLoading] = useState(true);
     const [lastSaved, setLastSaved] = useState<string | undefined>();
+    const [showVersionHistory, setShowVersionHistory] = useState(false);
+    const [versions, setVersions] = useState<DocumentVersion[]>([]);
+
+    // Load versions when a document is selected
+    useEffect(() => {
+        if (selectedDoc) {
+            fetchVersions(selectedDoc.id);
+        }
+    }, [selectedDoc]);
+
+    const fetchVersions = async (documentId: string) => {
+        try {
+            const response = await fetch(`${process.env.REACT_APP_API_URL}/document-versions?documentId=${documentId}&_sort=version&_order=desc`);
+            if (response.ok) {
+                const data = await response.json();
+                setVersions(data);
+            }
+        } catch (error) {
+            console.error('Error fetching versions:', error);
+        }
+    };
 
     useEffect(() => {
         // Try to restore user session
@@ -52,9 +75,64 @@ const App: React.FC = () => {
 
     const handleSave = async (content: string) => {
         if (selectedDoc && user) {
+            const newVersion = selectedDoc.metadata.version + 1;
+
+            // Create version record
+            const versionRecord: Partial<DocumentVersion> = {
+                documentId: selectedDoc.id,
+                content: selectedDoc.content, // Save the previous content
+                title: selectedDoc.title,
+                version: selectedDoc.metadata.version,
+                createdAt: new Date().toISOString(),
+                createdBy: user.id,
+                changeDescription: `Changes made by ${user.username}`,
+            };
+
+            try {
+                // Save version history
+                await fetch(`${process.env.REACT_APP_API_URL}/document-versions`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(versionRecord),
+                });
+
+                // Update document
+                const updatedDoc: Partial<Document> = {
+                    ...selectedDoc,
+                    content,
+                    metadata: {
+                        ...selectedDoc.metadata,
+                        updatedAt: new Date().toISOString(),
+                        version: newVersion,
+                    },
+                };
+
+                const response = await fetch(`${process.env.REACT_APP_API_URL}/documents/${selectedDoc.id}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(updatedDoc),
+                });
+
+                if (response.ok) {
+                    const saved = await response.json();
+                    setDocuments(docs =>
+                        docs.map(doc => doc.id === saved.id ? saved : doc)
+                    );
+                    setSelectedDoc(saved);
+                    setLastSaved(new Date().toISOString());
+                    await fetchVersions(saved.id);
+                }
+            } catch (error) {
+                console.error('Error saving document:', error);
+            }
+        }
+    };
+    const handleRestoreVersion = async (version: DocumentVersion) => {
+        if (selectedDoc && user) {
             const updatedDoc: Partial<Document> = {
                 ...selectedDoc,
-                content,
+                content: version.content,
+                title: version.title,
                 metadata: {
                     ...selectedDoc.metadata,
                     updatedAt: new Date().toISOString(),
@@ -70,19 +148,19 @@ const App: React.FC = () => {
                 });
 
                 if (response.ok) {
-                    const saved = await response.json();
+                    const restored = await response.json();
                     setDocuments(docs =>
-                        docs.map(doc => doc.id === saved.id ? saved : doc)
+                        docs.map(doc => doc.id === restored.id ? restored : doc)
                     );
-                    setSelectedDoc(saved);
+                    setSelectedDoc(restored);
+                    setShowVersionHistory(false);
                     setLastSaved(new Date().toISOString());
                 }
             } catch (error) {
-                console.error('Error saving document:', error);
+                console.error('Error restoring version:', error);
             }
         }
     };
-
     const handleTitleChange = async (newTitle: string) => {
         if (selectedDoc && user) {
             const updatedDoc = {
@@ -180,6 +258,7 @@ const App: React.FC = () => {
                     <DocumentHeader
                         document={selectedDoc}
                         onTitleChange={handleTitleChange}
+                        onVersionHistoryClick={() => setShowVersionHistory(true)}
                         lastSaved={lastSaved}
                     />
                 )}
@@ -197,6 +276,15 @@ const App: React.FC = () => {
                         )
                     )}
                 </main>
+                {user && (
+                    <VersionHistory
+                        versions={versions}
+                        currentUser={user}
+                        isOpen={showVersionHistory}
+                        onClose={() => setShowVersionHistory(false)}
+                        onRestore={handleRestoreVersion}
+                    />
+                )}
             </div>
         </div>
     );
