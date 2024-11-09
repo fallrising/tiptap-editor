@@ -5,6 +5,8 @@ import {
     Code, Quote, Undo, Redo,
     AlignLeft, AlignCenter, AlignRight,
 } from 'lucide-react';
+import { Link as LinkIcon } from 'lucide-react';
+import { LinkMenu } from './LinkMenu';
 import { Editor } from '@tiptap/react';
 import { TableMenu } from './TableMenu';
 import { Table } from 'lucide-react';
@@ -156,6 +158,17 @@ export const defaultToolbarGroups: ToolbarGroup[] = [
                 label: 'Table',
                 action: () => false, // This will be handled by the TableMenu component
                 customComponent: TableMenu, // Add this new property
+            },
+        ],
+    },
+    {
+        title: 'Links',
+        items: [
+            {
+                icon: LinkIcon,
+                label: 'Link',
+                action: () => false,
+                customComponent: LinkMenu,
             },
         ],
     },
