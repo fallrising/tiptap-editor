@@ -1,26 +1,22 @@
 import React from 'react';
-import logo from './logo.svg';
+import TiptapEditor from './components/editor/TiptapEditor';
 import './App.css';
 
-function App() {
+const App: React.FC = () => {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+      <div className="min-h-screen bg-gray-100">
+        <header className="bg-white shadow mb-4">
+          <div className="max-w-7xl mx-auto py-6 px-4">
+            <h1 className="text-3xl font-bold text-gray-900">
+              Rich Text Editor
+            </h1>
+          </div>
+        </header>
+        <main className="max-w-7xl mx-auto py-6 px-4">
+          <TiptapEditor />
+        </main>
+      </div>
   );
-}
+};
 
 export default App;

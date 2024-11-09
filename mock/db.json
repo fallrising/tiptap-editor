@@ -1,0 +1,24 @@
+{
+  "users": [
+    {
+      "id": "1",
+      "username": "admin",
+      "password": "admin123",
+      "role": "admin",
+      "permissions": ["create", "edit", "delete"]
+    }
+  ],
+  "documents": [
+    {
+      "id": "1",
+      "title": "Welcome Document",
+      "content": "<h1>Welcome to the Editor</h1><p>Start editing this document...</p>",
+      "metadata": {
+        "createdAt": "2024-11-09T00:00:00.000Z",
+        "updatedAt": "2024-11-09T00:00:00.000Z",
+        "createdBy": "1",
+        "version": 1
+      }
+    }
+  ]
+}
