@@ -5,7 +5,8 @@ import {
     List, ListOrdered,
     Heading1, Heading2, Heading3,
     Code, Quote, Undo, Redo,
-    Save
+    Save,
+    AlignLeft, AlignCenter, AlignRight
 } from 'lucide-react';
 import { clsx } from 'clsx';
 
@@ -113,6 +114,29 @@ const Toolbar: React.FC<ToolbarProps> = ({ editor, onSave }) => {
                     label: 'Ordered List',
                     action: () => editor.chain().focus().toggleOrderedList().run(),
                     isActive: () => editor.isActive('orderedList'),
+                },
+            ],
+        },
+        {
+            title: 'Alignment',
+            items: [
+                {
+                    icon: AlignLeft,
+                    label: 'Align Left',
+                    action: () => editor.chain().focus().setTextAlign('left').run(),
+                    isActive: () => editor.isActive({ textAlign: 'left' }),
+                },
+                {
+                    icon: AlignCenter,
+                    label: 'Align Center',
+                    action: () => editor.chain().focus().setTextAlign('center').run(),
+                    isActive: () => editor.isActive({ textAlign: 'center' }),
+                },
+                {
+                    icon: AlignRight,
+                    label: 'Align Right',
+                    action: () => editor.chain().focus().setTextAlign('right').run(),
+                    isActive: () => editor.isActive({ textAlign: 'right' }),
                 },
             ],
         },
