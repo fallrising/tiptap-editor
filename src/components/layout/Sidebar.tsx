@@ -1,3 +1,4 @@
+// src/components/layout/Sidebar.tsx
 import React from 'react';
 import { Document } from '../../types/document';
 
@@ -10,32 +11,45 @@ interface SidebarProps {
 
 const Sidebar: React.FC<SidebarProps> = ({ documents, selectedId, onSelect, onNew }) => {
     return (
-        <div className="w-64 bg-gray-50 border-r h-screen p-4">
-            <div className="flex justify-between items-center mb-4">
-                <h2 className="font-semibold text-gray-700">Documents</h2>
-                <button
-                    onClick={onNew}
-                    className="px-2 py-1 text-sm bg-blue-500 text-white rounded hover:bg-blue-600"
-                >
-                    New
-                </button>
-            </div>
-            <div className="space-y-1">
-                {documents.map((doc) => (
+        <div className="w-64 bg-gray-50 border-r h-screen flex flex-col">
+            <div className="p-4 border-b">
+                <div className="flex justify-between items-center">
+                    <h2 className="text-lg font-semibold text-gray-700">Documents</h2>
                     <button
-                        key={doc.id}
-                        onClick={() => onSelect(doc)}
-                        className={`
-              w-full text-left p-2 rounded text-sm
-              ${selectedId === doc.id ? 'bg-blue-100 text-blue-700' : 'hover:bg-gray-100'}
-            `}
+                        onClick={onNew}
+                        className="px-3 py-1 bg-blue-500 text-white text-sm rounded-md hover:bg-blue-600 transition-colors"
                     >
-                        <div className="font-medium truncate">{doc.title || 'Untitled'}</div>
-                        <div className="text-xs text-gray-500">
-                            {new Date(doc.metadata.updatedAt).toLocaleDateString()}
-                        </div>
+                        New
                     </button>
-                ))}
+                </div>
+            </div>
+            <div className="flex-1 overflow-y-auto">
+                <div className="p-2 space-y-1">
+                    {documents.map((doc) => (
+                        <button
+                            key={doc.id}
+                            onClick={() => onSelect(doc)}
+                            className={`
+                w-full text-left p-3 rounded-md transition-colors
+                ${selectedId === doc.id
+                                ? 'bg-blue-50 text-blue-700'
+                                : 'text-gray-600 hover:bg-gray-100'}
+              `}
+                        >
+                            <div className="font-medium truncate">
+                                {doc.title || 'Untitled Document'}
+                            </div>
+                            <div className="text-xs text-gray-500 mt-1">
+                                {new Date(doc.metadata.updatedAt).toLocaleDateString()}
+                            </div>
+                        </button>
+                    ))}
+                    {documents.length === 0 && (
+                        <div className="text-center text-gray-500 py-4">
+                            No documents yet. Create one!
+                        </div>
+                    )}
+                </div>
             </div>
         </div>
     );
