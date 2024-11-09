@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Document } from '@/types/document';
+import ExportMenu from './ExportMenu';
 
 interface DocumentHeaderProps {
     document: Document | null;
@@ -34,6 +35,10 @@ const DocumentHeader: React.FC<DocumentHeaderProps> = ({
         }
     };
 
+    if (!document) {
+        return null;
+    }
+
     return (
         <div className="flex items-center justify-between px-6 py-3 bg-white shadow-sm">
             <div className="flex items-center space-x-4">
@@ -55,26 +60,28 @@ const DocumentHeader: React.FC<DocumentHeaderProps> = ({
                         onClick={() => setIsEditing(true)}
                         title="Click to edit title"
                     >
-                        {document?.title || 'Untitled'}
+                        {document.title || 'Untitled'}
                     </h1>
                 )}
                 {lastSaved && (
                     <span className="text-sm text-gray-500">
-            Last saved: {new Date(lastSaved).toLocaleTimeString()}
-          </span>
+                        Last saved: {new Date(lastSaved).toLocaleTimeString()}
+                    </span>
                 )}
             </div>
             <div className="flex items-center space-x-4">
-                {document && (
-                    <button
-                        onClick={onVersionHistoryClick}
-                        className="text-sm text-blue-500 hover:text-blue-600"
-                    >
-                        View History
-                    </button>
-                )}
+                <ExportMenu
+                    content={document.content}
+                    title={document.title}
+                />
+                <button
+                    onClick={onVersionHistoryClick}
+                    className="text-sm text-blue-500 hover:text-blue-600"
+                >
+                    View History
+                </button>
                 <div className="text-sm text-gray-500">
-                    Version: {document?.metadata.version || 1}
+                    Version: {document.metadata.version}
                 </div>
             </div>
         </div>
