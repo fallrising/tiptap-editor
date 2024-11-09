@@ -8,6 +8,7 @@ import VersionHistory from './components/version/VersionHistory';
 import {CreateDocumentDto, Document} from './types/document';
 import { User } from './types/auth';
 import { DocumentVersion } from './types/version';
+import DeleteDialog from './components/editor/DeleteDialog';
 
 const App: React.FC = () => {
     const [user, setUser] = useState<User | null>(null);
@@ -17,6 +18,9 @@ const App: React.FC = () => {
     const [lastSaved, setLastSaved] = useState<string | undefined>();
     const [showVersionHistory, setShowVersionHistory] = useState(false);
     const [versions, setVersions] = useState<DocumentVersion[]>([]);
+    // Add new state variables inside the App component
+    const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+    const [documentToDelete, setDocumentToDelete] = useState<Document | null>(null);
 
     // Load versions when a document is selected
     useEffect(() => {
@@ -231,6 +235,25 @@ const App: React.FC = () => {
         }
     };
 
+    const handleDeleteDocument = async () => {
+        if (!documentToDelete) return;
+
+        try {
+            await fetch(`${process.env.REACT_APP_API_URL}/documents/${documentToDelete.id}`, {
+                method: 'DELETE',
+            });
+
+            setDocuments(docs => docs.filter(doc => doc.id !== documentToDelete.id));
+            if (selectedDoc?.id === documentToDelete.id) {
+                setSelectedDoc(null);
+            }
+            setShowDeleteDialog(false);
+            setDocumentToDelete(null);
+        } catch (error) {
+            console.error('Error deleting document:', error);
+        }
+    };
+
     if (!user) {
         return <LoginForm onLogin={handleLogin} />;
     }
@@ -262,7 +285,23 @@ const App: React.FC = () => {
                         document={selectedDoc}
                         onTitleChange={handleTitleChange}
                         onVersionHistoryClick={() => setShowVersionHistory(true)}
+                        onDeleteClick={(doc) => {
+                            setDocumentToDelete(doc);
+                            setShowDeleteDialog(true);
+                        }}
                         lastSaved={lastSaved}
+                    />
+                )}
+
+                {showDeleteDialog && documentToDelete && (
+                    <DeleteDialog
+                        isOpen={showDeleteDialog}
+                        onClose={() => {
+                            setShowDeleteDialog(false);
+                            setDocumentToDelete(null);
+                        }}
+                        onConfirm={handleDeleteDocument}
+                        title={documentToDelete.title}
                     />
                 )}
 
